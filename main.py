@@ -15,7 +15,7 @@ class MainHandler(webapp2.RequestHandler):
 		pageContent = feed.read()
 
 		# first find all the links
-		matches = re.findall('< *[aA] *[hH][rR][eE][fF] *= *"(.+?(?=< *\/ *[aA]))', pageContent, re.DOTALL)
+		matches = re.findall('< *a *href *= *"(.+?(?=< *\/ *a))', pageContent, re.DOTALL | re.IGNORECASE)
 		#print(matches)
 
 		# filter the link to the actual rapture index page
