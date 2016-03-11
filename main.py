@@ -7,7 +7,8 @@ import re
 
 class MainHandler(webapp2.RequestHandler):
 	def get(self):
-		url = "http://www.raptureready.com/"
+		domain = "http://www.raptureready.com/"
+		url = domain
 		try:
 			feed = urllib2.urlopen(url)
 		except urllib2.URLError, e:
@@ -21,6 +22,36 @@ class MainHandler(webapp2.RequestHandler):
 		# filter the link to the actual rapture index page
 		linkToRaptureIndex = [elem for elem in matches if re.search('rapture *index', elem, re.IGNORECASE)]
 		self.response.write(linkToRaptureIndex)
+
+		# let's extract the path or absolute URL now
+		# using this half-decent regex which should parse both the case
+		# when this is a path and also a case where this is absolute.
+		# if this fails, you can test this with the URLs here:
+		#    https://mathiasbynens.be/demo/url-regex
+		# also adding these examples:
+		#    /blah_blah_(wikipedia)dd,dsd
+		#    rap2.html">The Rapture Index'
+		#    rap2.html
+		#    ./miao.hmtl
+		#    miao/miao/nanana/mamama/kdkd.html
+		# using https://regex101.com/
+		matches = re.findall('^((\.?\/?\w+)*\/?([\w\-\.]+[\w]+)([^\s\t\"]*)?(#[\w\-]+)?)', linkToRaptureIndex[0], re.IGNORECASE | re.MULTILINE)
+		linkMatch = matches[0][0] + ""
+		
+		# now check if this is only a path then we need
+		# to also add the domain and protocol.
+		if not linkMatch.startswith('http://'):
+			linkMatch = domain + linkMatch
+		self.response.write("<br>" + linkMatch)
+
+		url = linkMatch
+		try:
+			feed = urllib2.urlopen(url)
+		except urllib2.URLError, e:
+			handleError(e)
+		pageContent = feed.read()
+		self.response.write(pageContent)
+		
 
 app = webapp2.WSGIApplication([
 	('/', MainHandler)
