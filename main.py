@@ -42,7 +42,7 @@ class MainHandler(webapp2.RequestHandler):
 		# to also add the domain and protocol.
 		if not linkMatch.startswith('http://'):
 			linkMatch = domain + linkMatch
-		self.response.write("<br>" + linkMatch)
+		#self.response.write("<br>" + linkMatch)
 
 		url = linkMatch
 		try:
@@ -50,7 +50,20 @@ class MainHandler(webapp2.RequestHandler):
 		except urllib2.URLError, e:
 			handleError(e)
 		pageContent = feed.read()
-		self.response.write(pageContent)
+		#self.response.write(pageContent)
+
+		#
+		# get all the index categories
+		#
+		matches = re.findall('<font face="Verdana" size="2">([^<]*)', pageContent, re.DOTALL | re.IGNORECASE)
+		# eliminate empty items
+		matches = [x for x in matches if x != ""]
+		# stop at the "net change" item
+		stopItem = next(x for x in matches if re.search('net *change', x, re.IGNORECASE))
+		indexUpToWhichKeep = matches.index(stopItem)
+		matches = matches[:indexUpToWhichKeep]
+
+		self.response.write("<br>" + (', '.join(matches)))
 		
 
 app = webapp2.WSGIApplication([
