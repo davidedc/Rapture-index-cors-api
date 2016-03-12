@@ -70,6 +70,61 @@ class MainHandler(webapp2.RequestHandler):
 		#
 		matches = re.findall('[^ \d](\d+[-\+]?\d?)<[b\/s][rfut]', pageContent, re.DOTALL | re.IGNORECASE)
 		self.response.write("<br>" + (', '.join(matches)) + " length: " + str(len(matches)))
+
+		#
+		# get the rapture index
+		#
+		matches = re.findall('rapture +index +(\d+)', pageContent, re.DOTALL | re.IGNORECASE)
+		self.response.write("<br>" + (', '.join(matches)))
+
+		#
+		# get the net change
+		#
+		matches = re.findall('Net Change(&nbsp;)*[ \n\r\t]*(\+?-?\d+)', pageContent, re.DOTALL | re.IGNORECASE)
+		self.response.write("<br>" + matches[0][1])
+
+		#
+		# get the updated date
+		#
+		matches = re.findall('updated (.+?)(<\/font)', pageContent, re.DOTALL | re.IGNORECASE)
+		self.response.write("<br>" + matches[0][0])
+
+		#
+		# record high
+		#
+		matches = re.findall('record *high *(\d*)', pageContent, re.DOTALL | re.IGNORECASE)
+		self.response.write("<br>" + matches[0])
+		
+		#
+		# record low
+		#
+		matches = re.findall('record *low *(\d*)', pageContent, re.DOTALL | re.IGNORECASE)
+		self.response.write("<br>" + matches[0])
+
+		#
+		# high date and low date
+		#
+		matches = re.findall('(([0-9])|([0-2][0-9])|([3][0-1]))\ (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\ (\d{4})', pageContent, re.DOTALL | re.IGNORECASE)
+		self.response.write("<br>" + matches[0][2] + " " + matches[0][4] + " " +  matches[0][5])
+		self.response.write("<br>" + matches[1][2] + " " + matches[1][4] + " " +  matches[1][5])
+		
+		#
+		# notes headlines numbers
+		#
+		matches = re.findall('^(\d\d) [\w \/\-\\(\\)]*:?$', pageContent, re.IGNORECASE | re.MULTILINE)
+		self.response.write("<br>" + (', '.join(matches)))
+
+		#
+		# notes headlines
+		#
+		matches = re.findall('^\d\d ([\w \/\-\\(\\)]*):?$', pageContent, re.IGNORECASE | re.MULTILINE)
+		self.response.write("<br>" + (', '.join(matches)))
+		
+		#
+		# notes bodies
+		#
+		matches = re.findall('\n    ? ?(\w.+?(?=\n))', pageContent, re.IGNORECASE)
+		self.response.write("<br>" + (', '.join(matches)))
 		
 
 app = webapp2.WSGIApplication([
