@@ -64,6 +64,12 @@ class MainHandler(webapp2.RequestHandler):
 		matches = matches[:indexUpToWhichKeep]
 
 		self.response.write("<br>" + (', '.join(matches)))
+
+		#
+		# get all the category values as strings (some of them contain +/- values as well)
+		#
+		matches = re.findall('[^ \d](\d+[-\+]?\d?)<[b\/s][rfut]', pageContent, re.DOTALL | re.IGNORECASE)
+		self.response.write("<br>" + (', '.join(matches)) + " length: " + str(len(matches)))
 		
 
 app = webapp2.WSGIApplication([
