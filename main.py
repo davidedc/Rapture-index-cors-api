@@ -3,10 +3,16 @@
 import webapp2
 import urllib2
 import re
+import json
 
 
 class MainHandler(webapp2.RequestHandler):
 	def get(self):
+		
+		# enable CORS from any domain
+		self.response.headers.add_header("Access-Control-Allow-Origin", "*")
+		self.response.headers['Content-Type'] = 'application/json'
+
 		domain = "http://www.raptureready.com/"
 		url = domain
 		try:
@@ -21,7 +27,7 @@ class MainHandler(webapp2.RequestHandler):
 
 		# filter the link to the actual rapture index page
 		linkToRaptureIndex = [elem for elem in matches if re.search('rapture *index', elem, re.IGNORECASE)]
-		self.response.write(linkToRaptureIndex)
+		#self.response.write(linkToRaptureIndex)
 
 		# let's extract the path or absolute URL now
 		# using this half-decent regex which should parse both the case
@@ -61,71 +67,98 @@ class MainHandler(webapp2.RequestHandler):
 		# stop at the "net change" item
 		stopItem = next(x for x in matches if re.search('net *change', x, re.IGNORECASE))
 		indexUpToWhichKeep = matches.index(stopItem)
-		matches = matches[:indexUpToWhichKeep]
-
-		self.response.write("<br>" + (', '.join(matches)))
+		indexCategories = matches[:indexUpToWhichKeep]
+		#self.response.write("<br>" + (', '.join(indexCategories)))
 
 		#
 		# get all the category values as strings (some of them contain +/- values as well)
 		#
 		matches = re.findall('[^ \d](\d+[-\+]?\d?)<[b\/s][rfut]', pageContent, re.DOTALL | re.IGNORECASE)
-		self.response.write("<br>" + (', '.join(matches)) + " length: " + str(len(matches)))
+		categoryValues = matches
+		#self.response.write("<br>" + categoryValues + " length: " + str(len(matches)))
 
 		#
 		# get the rapture index
 		#
-		matches = re.findall('rapture +index +(\d+)', pageContent, re.DOTALL | re.IGNORECASE)
-		self.response.write("<br>" + (', '.join(matches)))
+		raptureIndexValue = re.findall('rapture +index +(\d+)', pageContent, re.DOTALL | re.IGNORECASE)
+		#self.response.write("<br>" + raptureIndexValue)
 
 		#
 		# get the net change
 		#
 		matches = re.findall('Net Change(&nbsp;)*[ \n\r\t]*(\+?-?\d+)', pageContent, re.DOTALL | re.IGNORECASE)
-		self.response.write("<br>" + matches[0][1])
+		netChange = matches[0][1]
+		#self.response.write("<br>" + netChange)
 
 		#
 		# get the updated date
 		#
 		matches = re.findall('updated (.+?)(<\/font)', pageContent, re.DOTALL | re.IGNORECASE)
-		self.response.write("<br>" + matches[0][0])
+		updatedDate = matches[0][0]
+		#self.response.write("<br>" + updatedDate)
 
 		#
 		# record high
 		#
 		matches = re.findall('record *high *(\d*)', pageContent, re.DOTALL | re.IGNORECASE)
-		self.response.write("<br>" + matches[0])
+		recordHigh = matches[0]
+		#self.response.write("<br>" + recordHigh)
 		
 		#
 		# record low
 		#
 		matches = re.findall('record *low *(\d*)', pageContent, re.DOTALL | re.IGNORECASE)
-		self.response.write("<br>" + matches[0])
+		recordLow = matches[0]
+		#self.response.write("<br>" + recordLow)
 
 		#
 		# high date and low date
 		#
 		matches = re.findall('(([0-9])|([0-2][0-9])|([3][0-1]))\ (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\ (\d{4})', pageContent, re.DOTALL | re.IGNORECASE)
-		self.response.write("<br>" + matches[0][2] + " " + matches[0][4] + " " +  matches[0][5])
-		self.response.write("<br>" + matches[1][2] + " " + matches[1][4] + " " +  matches[1][5])
+		highDate = matches[0][2] + " " + matches[0][4] + " " +  matches[0][5]
+		lowDate = matches[1][2] + " " + matches[1][4] + " " +  matches[1][5]
+		#self.response.write("<br>" + highDate)
+		#self.response.write("<br>" + lowDate)
 		
 		#
 		# notes headlines numbers
 		#
 		matches = re.findall('^(\d\d) [\w \/\-\\(\\)]*:?$', pageContent, re.IGNORECASE | re.MULTILINE)
-		self.response.write("<br>" + (', '.join(matches)))
+		notesHeadlinesNumbers = matches
+		#self.response.write("<br>" + notesHeadlinesNumbers)
 
 		#
 		# notes headlines
 		#
 		matches = re.findall('^\d\d ([\w \/\-\\(\\)]*):?$', pageContent, re.IGNORECASE | re.MULTILINE)
-		self.response.write("<br>" + (', '.join(matches)))
+		notesHeadlines = matches
+		#self.response.write("<br>" + notesHeadlines)
 		
 		#
 		# notes bodies
 		#
 		matches = re.findall('\n    ? ?(\w.+?(?=\n))', pageContent, re.IGNORECASE)
-		self.response.write("<br>" + (', '.join(matches)))
-		
+		notesBodies = matches
+		#self.response.write("<br>" + notesBodies)
+
+		# now generate the JSON
+		# you can debug the JSON here: http://jsonviewer.stack.hu/
+		obj = {
+			'linkToRaptureIndex': linkMatch, 
+			'indexCategories': indexCategories,
+			'categoryValues': categoryValues,
+			'raptureIndexValue': raptureIndexValue,
+			'netChange': netChange,
+			'updatedDate': updatedDate,
+			'recordHigh': recordHigh,
+			'recordLow': recordLow,
+			'highDate': highDate,
+			'lowDate': lowDate,
+			'notesHeadlinesNumbers': notesHeadlinesNumbers,
+			'notesHeadlines': notesHeadlines,
+			'notesBodies': notesBodies,
+		}
+		self.response.out.write(json.dumps(obj))		
 
 app = webapp2.WSGIApplication([
 	('/', MainHandler)
