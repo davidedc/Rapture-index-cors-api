@@ -144,7 +144,7 @@ class MainHandler(webapp2.RequestHandler):
 		#
 		# notes bodies
 		#
-		matches = re.findall('^    (.+?(?=\n\d))', notesBodiesText, re.DOTALL | re.IGNORECASE | re.MULTILINE)
+		matches = re.findall('^    ?(.+?(?=\n\d))', notesBodiesText, re.DOTALL | re.IGNORECASE | re.MULTILINE)
 		notesBodies = matches
 		#self.response.write("<br>" + notesBodies)
 
