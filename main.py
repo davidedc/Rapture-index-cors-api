@@ -137,9 +137,18 @@ class MainHandler(webapp2.RequestHandler):
 		#
 		# notes bodies
 		#
-		matches = re.findall('\n    ? ?(\w.+?(?=\n))', pageContent, re.IGNORECASE)
+		matches = re.findall('[^>]<pre class="style1">(.+?(?=<\/pre))', pageContent, re.DOTALL | re.IGNORECASE | re.MULTILINE)
+		notesBodiesText =  ('\n'.join(matches)) + "\n99"
+		#self.response.write("<br>" + notesBodies)
+
+		#
+		# notes bodies
+		#
+		matches = re.findall('^    (.+?(?=\n\d))', notesBodiesText, re.DOTALL | re.IGNORECASE | re.MULTILINE)
 		notesBodies = matches
 		#self.response.write("<br>" + notesBodies)
+
+
 
 		# now generate the JSON
 		# you can debug the JSON here: http://jsonviewer.stack.hu/
