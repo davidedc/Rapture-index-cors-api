@@ -135,14 +135,16 @@ class MainHandler(webapp2.RequestHandler):
 		#self.response.write("<br>" + notesHeadlines)
 		
 		#
-		# notes bodies
+		# extract the whole <pre> tag content with the notes bodies,
+		# to make actual extraction simpler in next step
 		#
 		matches = re.findall('[^>]<pre class="style1">(.+?(?=<\/pre))', pageContent, re.DOTALL | re.IGNORECASE | re.MULTILINE)
+		# add a newline and double digit at the end to make extraction in next step easier
 		notesBodiesText =  ('\n'.join(matches)) + "\n99"
 		#self.response.write("<br>" + notesBodies)
 
 		#
-		# notes bodies
+		# actual extraction of notes bodies
 		#
 		matches = re.findall('^    ?(.+?(?=\n\d))', notesBodiesText, re.DOTALL | re.IGNORECASE | re.MULTILINE)
 		notesBodies = matches
