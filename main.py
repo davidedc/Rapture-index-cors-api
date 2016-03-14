@@ -80,7 +80,8 @@ class MainHandler(webapp2.RequestHandler):
 		#
 		# get the rapture index
 		#
-		raptureIndexValue = re.findall('rapture +index +(\d+)', pageContent, re.DOTALL | re.IGNORECASE)
+		matches = re.findall('rapture +index +(\d+)', pageContent, re.DOTALL | re.IGNORECASE)
+		raptureIndexValue = matches[0]
 		#self.response.write("<br>" + raptureIndexValue)
 
 		#
