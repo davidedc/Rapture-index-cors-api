@@ -14,7 +14,7 @@ Although some of these mechanisms still work, things have been made much more di
 
 The reasons for this change are complex, it's got to do partly with security and the self-defense of API endpoints (both completely unwarranted most of the times, in my opinion).
 
-We'll eventually go back to that vision - in the meantime what we can do is to open services to serve data cross-domain, using CORS.
+We'll eventually go back to that vision - in the meantime what we can do is to open services to serve data cross-domain, using CORS (which practically means adding a one-line header to the server response).
 
 
 # How
