@@ -19,7 +19,7 @@ We'll eventually go back to that vision - in the meantime what we can do is to o
 
 # How
 
-This project runs on Google App Engine, which is a server solution that is practically free. This server parses the Rapture Index website (only if any requests are made, and at most once every hour) and serves the resulting JSON. Just do a GET on http://rapture-index-cors-api.appspot.com/ (or ```curl http://rapture-index-cors-api.appspot.com/ ``` ) to get the JSON with the data. You can see a nice visualisation of the JSON clicking on [this link](http://jsonviewer.stack.hu/#http://rapture-index-cors-api.appspot.com/)
+This project runs on Google App Engine, which is a server solution that is practically free. This server parses the Rapture Index website (only if any requests are made, and at most once every hour) and serves the resulting JSON. Just do an AJAX GET on http://rapture-index-cors-api.appspot.com/ (or ```curl http://rapture-index-cors-api.appspot.com/ ``` from the command line) to get the JSON with the data. You can see a nice visualisation of the JSON clicking on [this link](http://jsonviewer.stack.hu/#http://rapture-index-cors-api.appspot.com/)
 
 You can use my server (until it costs me) or just set up your own Google App Engine server.
 
