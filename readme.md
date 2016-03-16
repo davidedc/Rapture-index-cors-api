@@ -25,4 +25,4 @@ You can use my server (until it costs me) or just set up your own Google App Eng
 
 # Disclaimer
 
-There is no affiliation between this project and the Raptureready website. If you like the site, please consider donating to them (here)[https://www.raptureready.com/rr-an-donation.php]. 
+There is no affiliation between this project and the Raptureready website. If you like the site, please consider donating to them [here](https://www.raptureready.com/rr-an-donation.php). 
