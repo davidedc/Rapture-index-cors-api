@@ -10,11 +10,11 @@ This API is used by my [Rapture Index Dashboard](https://github.com/davidedc/Rap
 
 There was this popular concept of "mashups" in the 90s: i.e. sets of scripts and web applications that could easily interoperate (directly within the browser) using datasets potentially coming from other domains, for example to visualise one dataset with a map application. This vision was particularly pushed by Yahoo, which also provided tools like Yahoo Pipes and YQL, where one could for example arbitrarily query websites as if they were databases, and could combine flows of data coming from different domains.
 
-Although some of these mechanisms still work, things have been made much more difficult lately by pervasive use of oauth and API keys. oauth and API keys complicate interoperability a lot, requiring complex flows and local servers of proxies (to keep the keys private) where otherwise a few lines of client-side javascript would have done the trick. Yahoo Pipes and YQL are in a general state of disrepair.
+Although some of these mechanisms still work, things have been made much more difficult lately by pervasive use of OAuth and API keys. OAuth and API keys complicate interoperability a lot, requiring complex flows and local servers of proxies (to keep the keys private) where otherwise a few lines of client-side javascript would have done the trick. Yahoo Pipes and YQL are in a general state of disrepair.
 
-The reasons for this change are complex, it's got to do partly with security and the self-defense of API endpoints (both completely unwarranted most of the times, in my opinion).
+The reasons for this change are complex, it's got to do partly with security (very little), partly with the self-defense of API endpoints against attacks (lazy excuse), and partly because "walled gardens" give a business advantage. Case in example: [Google's URL shortener API](https://developers.google.com/url-shortener/v1/getting_started#OAuth2Authorizing) which for absolutely no reason requires OAuth/keys.
 
-We'll eventually go back to that vision - in the meantime what we can do is to open services to serve data cross-domain, using CORS (which practically means adding a one-line header to the server response).
+We'll eventually go back to that free-range vision; in the meantime what we can do is to open services to serve data cross-domain, using CORS (which practically means adding a one-line header to the server response).
 
 
 # How
