@@ -12,11 +12,12 @@ from google.appengine.api import memcache
 class MainHandler(webapp2.RequestHandler):
 	def get(self):
 		
-		# enable CORS from any domain
+		# add header and enable CORS from any domain
 		self.response.headers.add_header("Access-Control-Allow-Origin", "*")
 		self.response.headers['Content-Type'] = 'application/json'
 
-		# the key will change every hour
+		# we are going to cache any response for the hour
+		# i.e. we are gonna hit the other server at most once every hour
 		now = datetime.datetime.now()
 		keyForCache = str(now.year) + "-" + str(now.month) + "-" + str(now.day) + "-" + str(now.hour)
 
@@ -25,13 +26,16 @@ class MainHandler(webapp2.RequestHandler):
 
 			domain = "http://www.raptureready.com/"
 			url = domain
+			
+			# first fetch the main page and get the link
+			# of where the index data is
 			try:
 				feed = urllib2.urlopen(url)
 			except urllib2.URLError, e:
 				handleError(e)
 			pageContent = feed.read()
 
-			# first find all the links
+			# find all the links
 			matches = re.findall('< *a *href *= *"(.+?(?=< *\/ *a))', pageContent, re.DOTALL | re.IGNORECASE)
 			#print(matches)
 
@@ -60,6 +64,7 @@ class MainHandler(webapp2.RequestHandler):
 				linkMatch = domain + linkMatch
 			#self.response.write("<br>" + linkMatch)
 
+			# get the proper page with the index data
 			url = linkMatch
 			try:
 				feed = urllib2.urlopen(url)
