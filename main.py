@@ -105,7 +105,7 @@ class MainHandler(webapp2.RequestHandler):
 			matches = re.findall('Net Change(&nbsp;)*[ \n\r\t]*((\+?-?\d+)|(unch\w*))', pageContent, re.DOTALL | re.IGNORECASE)
 			netChange = matches[0][1]
 			if re.search('unch\w*', netChange):
-				netChange = "0"
+				netChange = "(unchanged)"
 			#self.response.write("<br>" + netChange)
 
 			#
