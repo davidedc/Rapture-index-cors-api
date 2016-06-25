@@ -102,8 +102,10 @@ class MainHandler(webapp2.RequestHandler):
 			#
 			# get the net change
 			#
-			matches = re.findall('Net Change(&nbsp;)*[ \n\r\t]*(\+?-?\d+)', pageContent, re.DOTALL | re.IGNORECASE)
+			matches = re.findall('Net Change(&nbsp;)*[ \n\r\t]*((\+?-?\d+)|(unch\w*))', pageContent, re.DOTALL | re.IGNORECASE)
 			netChange = matches[0][1]
+			if re.search('unch\w*', netChange):
+				netChange = "0"
 			#self.response.write("<br>" + netChange)
 
 			#
